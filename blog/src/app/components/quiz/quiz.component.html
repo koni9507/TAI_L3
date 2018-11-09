@@ -1,0 +1,220 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <h1><a class="nav-item nav-link" href="index.html">TAI_L3</a></h1>
+</nav>
+
+<h2>Quiz ważnych faktów</h2>
+<div class="quiz-container">
+  <div id="quiz"></div>
+</div>
+<button id="previous">Poprzednie pytanie</button>
+<button id="next">Następne pytanie</button>
+<button id="submit">Zakończ quiz</button>
+<div id="results"></div>
+
+
+
+
+<script language="JavaScript">
+  (function() {
+    const myQuestions = [
+      {
+        question: "Kto jest najmocniejszy?",
+        answers: {
+          a: "Superman",
+          b: "Terminator",
+          c: "Kapitan Ameryka"
+        },
+        correctAnswer: "a"
+      },
+      {
+        question: "Jaka jest najlepsza stona ever?",
+        answers: {
+          a: "WP.PL",
+          b: "Kwejk.pl",
+          c: "Onet.pl"
+        },
+        correctAnswer: "c"
+      },
+      {
+        question: "Jaki producent telefonów ma największy kapitał?",
+        answers: {
+          a: "Samsung",
+          b: "Apple",
+          c: "HTC",
+          d: "Nokia"
+        },
+        correctAnswer: "b"
+      },
+      {
+        question: "Jaki jest najgorszy dzień tygodnia?",
+        answers: {
+          a: "Poniedziałek",
+          b: "Wtorek",
+          c: "Sobota",
+          d: "Piątek"
+        },
+        correctAnswer: "a"
+      },
+      {
+        question: "Ile jest 6x6?",
+        answers: {
+          a: "26",
+          b: "66",
+          c: "36",
+          d: "6"
+        },
+        correctAnswer: "c"
+      },
+      {
+        question: "Który producent posiada w swojej ofercie model Q5?",
+        answers: {
+          a: "BMW",
+          b: "Audi",
+          c: "WV",
+          d: "Mercedes"
+        },
+        correctAnswer: "b"
+      },
+      {
+        question: "Co oznacza skrót 4WS",
+        answers: {
+          a: "Napęd 4 na 4",
+          b: "4 koło u wozu",
+          c: "4 starszych wiernych",
+          d: "4 koła skrętne"
+        },
+        correctAnswer: "d"
+      },
+      {
+        question: "W jakim województwie znajduje się Tarnów?",
+        answers: {
+          a: "Wielkopolskie",
+          b: "Podkarpackie",
+          c: "Małopolskie",
+          d: "Śląskie"
+        },
+        correctAnswer: "c"
+      },
+      {
+        question: "Kto sąsiaduje z Polską?",
+        answers: {
+          a: "Niemcy",
+          b: "Grecja",
+          c: "Włochy",
+          d: "Portugalia"
+        },
+        correctAnswer: "a"
+      },
+      {
+        question: "Co oznacza astygmatyzm?",
+        answers: {
+          a: "Super moce",
+          b: "Braki edukacyjne",
+          c: "Wadę wzroku",
+          d: "Żelazną wątrobe"
+        },
+        correctAnswer: "c"
+      },
+
+    ];
+
+
+    function buildQuiz() {
+      // we'll need a place to store the HTML output
+      const output = [];
+      // for each question...
+      myQuestions.forEach((currentQuestion, questionNumber) => {
+        // we'll want to store the list of answer choices
+        const answers = [];
+        // and for each available answer...
+        for (letter in currentQuestion.answers) {
+          // ...add an HTML radio button
+          answers.push(
+            `<label>
+             <input type="radio" name="question${questionNumber}" value="${letter}">
+              ${letter} :
+              ${currentQuestion.answers[letter]}
+           </label>`
+          );
+        }
+        // add this question and its answers to the output
+        output.push(
+          `<div class="slide">
+           <div class="question"> ${currentQuestion.question} </div>
+           <div class="answers"> ${answers.join("")} </div>
+         </div>`
+        );
+      });
+      // finally combine our output list into one string of HTML and put it on the page
+      quizContainer.innerHTML = output.join("");
+    }
+    function showResults() {
+      // gather answer containers from our quiz
+      const answerContainers = quizContainer.querySelectorAll(".answers");
+      // keep track of user's answers
+      let numCorrect = 0;
+      // for each question...
+      myQuestions.forEach((currentQuestion, questionNumber) => {
+        // find selected answer
+        const answerContainer = answerContainers[questionNumber];
+        const selector = `input[name=question${questionNumber}]:checked`;
+        const userAnswer = (answerContainer.querySelector(selector) || {}).value;
+        // if answer is correct
+        if (userAnswer === currentQuestion.correctAnswer) {
+          // add to the number of correct answers
+          numCorrect++;
+          // color the answers green
+          answerContainers[questionNumber].style.color = "lightgreen";
+        } else {
+          // if answer is wrong or blank
+          // color the answers red
+          answerContainers[questionNumber].style.color = "red";
+        }
+      });
+      // show number of correct answers out of total
+      resultsContainer.innerHTML = `${numCorrect} out of ${myQuestions.length}`;
+    }
+    function showSlide(n) {
+      slides[currentSlide].classList.remove("active-slide");
+      slides[n].classList.add("active-slide");
+      currentSlide = n;
+      if (currentSlide === 0) {
+        previousButton.style.display = "none";
+      } else {
+        previousButton.style.display = "inline-block";
+      }
+      if (currentSlide === slides.length - 1) {
+        nextButton.style.display = "none";
+        submitButton.style.display = "inline-block";
+      } else {
+        nextButton.style.display = "inline-block";
+        submitButton.style.display = "none";
+      }
+    }
+
+
+    function showNextSlide() {
+      showSlide(currentSlide + 1);
+
+
+    }
+    function showPreviousSlide() {
+      showSlide(currentSlide - 1);
+
+    }
+    const quizContainer = document.getElementById("quiz");
+    const resultsContainer = document.getElementById("results");
+    const submitButton = document.getElementById("submit");
+    // display quiz right away
+    buildQuiz();
+    const previousButton = document.getElementById("previous");
+    const nextButton = document.getElementById("next");
+    const slides = document.querySelectorAll(".slide");
+    let currentSlide = 0;
+    showSlide(0);
+    // on submit, show results
+    submitButton.addEventListener("click", showResults);
+    previousButton.addEventListener("click", showPreviousSlide);
+    nextButton.addEventListener("click", showNextSlide);
+  })();
+</script>
