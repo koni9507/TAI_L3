@@ -16,4 +16,4 @@ for (var i = 0; i < 11; i++) {
 }
 console.log(result);
 
-///po kompilacji widać automatyczną 
+///po kompilacji widać automatyczną
