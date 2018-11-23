@@ -1,0 +1,12 @@
+<div class="container">
+  <div class="col-sm-6 mx-auto d-block mt-5">
+    <div class="card">
+      <app-blog-item-image [image]="image"></app-blog-item-image>
+      <div class="card-body">
+        <app-blog-item-text [text]="text | summary:80" [id]="id"></app-blog-item-text>
+        <a [routerLink]="['/blog/details', id]">Czytaj dalej...</a>
+      </div>
+    </div>
+  </div>
+
+</div>
